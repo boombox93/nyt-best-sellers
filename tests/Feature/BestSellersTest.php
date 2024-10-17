@@ -537,4 +537,185 @@ class BestSellersTest extends TestCase
             'Assert that the title expected is invalid'
         );
     }
+
+    /**
+     * Test case for 400 from NYT API
+     *
+     * @return void
+     */
+    public function test_400_best_sellers_api_response()
+    {
+        Http::fake([
+            '*' => Http::response([], 400),
+        ]);
+
+        $response = $this->json('GET', $this->endpoint);
+
+        $this->assertEquals(
+            400,
+            $response['status'],
+            'Assert that the response from the API is 400'
+        );
+
+        $this->assertFalse(
+            $response['success'],
+            'Assert the response success flag is false',
+        );
+
+        $this->assertEquals(
+            'An invalid request was made to the NYT API, please check your input parameters.',
+            $response['message'],
+            'Assert that the response message is set.'
+        );
+    }
+
+    /**
+     * Test case for 401 from NYT API
+     *
+     * @return void
+     */
+    public function test_401_best_sellers_api_response()
+    {
+        Http::fake([
+            '*' => Http::response([], 401),
+        ]);
+
+        $response = $this->json('GET', $this->endpoint);
+
+        $this->assertEquals(
+            401,
+            $response['status'],
+            'Assert that the response from the API is 401'
+        );
+
+        $this->assertFalse(
+            $response['success'],
+            'Assert the response success flag is false',
+        );
+
+        $this->assertEquals(
+            'An unexpected error occurred, please try again later.',
+            $response['message'],
+            'Assert that the response message is set.'
+        );
+    }
+
+    /**
+     * Test case for 404 from NYT API
+     *
+     * @return void
+     */
+    public function test_404_best_sellers_api_response()
+    {
+        Http::fake([
+            '*' => Http::response([], 404),
+        ]);
+
+        $response = $this->json('GET', $this->endpoint);
+
+        $this->assertEquals(
+            404,
+            $response['status'],
+            'Assert that the response from the API is 404'
+        );
+
+        $this->assertFalse(
+            $response['success'],
+            'Assert the response success flag is false',
+        );
+
+        $this->assertEquals(
+            'Unable to complete the request at this time, please contact administration.',
+            $response['message'],
+            'Assert that the response message is set.'
+        );
+    }
+
+    /**
+     * Test case for 408 from NYT API
+     *
+     * @return void
+     */
+    public function test_408_best_sellers_api_response()
+    {
+        Http::fake([
+            '*' => Http::response([], 408),
+        ]);
+
+        $response = $this->json('GET', $this->endpoint);
+
+        $this->assertEquals(
+            408,
+            $response['status'],
+            'Assert that the response from the API is 408'
+        );
+
+        $this->assertFalse(
+            $response['success'],
+            'Assert the response success flag is false',
+        );
+
+        $this->assertEquals(
+            'A timeout occurred while making a request to the NYT API. Please try again later.',
+            $response['message'],
+            'Assert that the response message is set.'
+        );
+    }
+
+    /**
+     * Test case for 429 from NYT API
+     *
+     * @return void
+     */
+    public function test_429_best_sellers_api_response()
+    {
+        Http::fake([
+            '*' => Http::response([], 429),
+        ]);
+
+        $response = $this->json('GET', $this->endpoint);
+
+        $this->assertEquals(
+            429,
+            $response['status'],
+            'Assert that the response from the API is 429'
+        );
+
+        $this->assertFalse(
+            $response['success'],
+            'Assert the response success flag is false',
+        );
+
+        $this->assertEquals(
+            'Too many requests were made to the NYT API in a short amount of time. Please try again in 5 minutes.',
+            $response['message'],
+            'Assert that the response message is set.'
+        );
+    }
+
+    /**
+     * Test default response
+     *
+     * @return void
+     */
+    public function test_default_best_sellers_api_response()
+    {
+        Http::fake([
+            '*' => Http::response([], 111),
+        ]);
+
+        $response = $this->json('GET', $this->endpoint);
+
+        $this->assertFalse(
+            $response['success'],
+            'Assert the response success flag is false',
+        );
+
+        $this->assertEquals(
+            'Unable to complete the request at this time.',
+            $response['message'],
+            'Assert that the response message is set.'
+        );
+    }
+
 }
